@@ -1,0 +1,64 @@
+version: '2'
+
+services:
+  alluxio-master:
+    build: docker-alluxio-base
+    command: /start.sh master
+    ports:
+      - 19999:19999
+      - 19998:19998
+    volumes:
+      - data:/data
+#    environment:
+#      ALLUXIO_MASTER_ADDRESS: alluxio-master
+#      ALLUXIO_WORKER_MEMORY_SIZE: 500mb
+#      ALLUXIO_UNDERFS_ADDRESS: /data
+#      ALLUXIO_RAM_FOLDER: /dev/ram
+
+  alluxio-slave:
+    build: docker-alluxio-base
+    command: /start.sh slave
+    links:
+      - alluxio-master
+    volumes:
+      - data:/data
+#    environment:
+#      ALLUXIO_MASTER_ADDRESS: alluxio-master
+#      ALLUXIO_WORKER_MEMORY_SIZE: 500mb
+#      ALLUXIO_UNDERFS_ADDRESS: /data
+#      ALLUXIO_RAM_FOLDER: /dev/ram
+
+volumes:
+  data:
+
+
+
+
+
+
+#zookeeper:
+#  image: wurstmeister/zookeeper
+#  ports:
+#    - "2181:2181"
+#
+#kafka:
+#  build: docker-kafka
+#  ports:
+#    - "9092:9092"
+#  links:
+#    - zookeeper:zk
+#  environment:
+#    KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+#  volumes:
+#    - /var/run/docker.sock:/var/run/docker.sock
+#
+#druid:
+#  build: docker-druid
+#  ports:
+#    - "8081:8081"
+#    - "8082:8082"
+#    - "8083:8083"
+#    - "8090:8090"
+#  links:
+#    - zookeeper:zk
+#    - kafka:kakfa
